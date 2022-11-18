@@ -17,39 +17,47 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try {
         const database = client.db('razor-cut-app');
-        const servicesCollection = database.collection('services');
+        const servicesCollection = database.collection('catagories');
+        const shopsCollection = database.collection('shops');
 
         console.log('Connected correctly to server');
         
-        // get all services
+        // get all catagories
         app.get('/services', async(req, res) => {
             const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services)
         })
 
-        // add service
-        app.post('/services', async(req, res) => {
-            const service = req.body;
-            const result = await servicesCollection.insertOne(service);
-            res.json(result)
-        })
+        // // add catagories
+        // app.post('/services', async(req, res) => {
+        //     const service = req.body;
+        //     const result = await catagoriesCollection.insertOne(service);
+        //     res.json(result)
+        // })
         
-        // get single service
-        app.get('/services/:id', async(req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const service = await servicesCollection.findOne(query);
-            res.send(service)
-        })
+        // // get single service
+        // app.get('/services/:id', async(req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const service = await servicesCollection.findOne(query);
+        //     res.send(service)
+        // })
         
-        // delete service by id
-        app.delete("/services/:id", async (req, res) => {
-            const id = req.params.id
-            const query = { _id: ObjectId(id) }
-            const singleService = await servicesCollection.deleteOne(query)
-            res.json(singleService)
-        });
+        // // delete service by id
+        // app.delete("/services/:id", async (req, res) => {
+        //     const id = req.params.id
+        //     const query = { _id: ObjectId(id) }
+        //     const singleService = await servicesCollection.deleteOne(query)
+        //     res.json(singleService)
+        // });
+
+        // get all shops
+        app.get('/shops', async(req, res) => {
+            const cursor = shopsCollection.find({});
+            const shops = await cursor.toArray();
+            res.send(shops)
+        })
 
 
     } finally {
