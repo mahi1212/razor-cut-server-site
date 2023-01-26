@@ -22,9 +22,9 @@ async function run() {
         const usersCollection = database.collection('users');
         const appointmentCollection = database.collection('appointment');
         console.log('Connected correctly to server');
-        
+
         // get all catagories
-        app.get('/services', async(req, res) => {
+        app.get('/services', async (req, res) => {
             const cursor = servicesCollection.find({});
             const services = await cursor.toArray();
             res.send(services)
@@ -35,14 +35,14 @@ async function run() {
         //     const services = await cursor.toArray();
         //     res.send(services)
         // })
-        
+
         // // add catagories
         // app.post('/services', async(req, res) => {
         //     const service = req.body;
         //     const result = await catagoriesCollection.insertOne(service);
         //     res.json(result)
         // })
-        
+
         // // get single service
         // app.get('/services/:id', async(req, res) => {
         //     const id = req.params.id;
@@ -50,7 +50,7 @@ async function run() {
         //     const service = await servicesCollection.findOne(query);
         //     res.send(service)
         // })
-        
+
         // // delete service by id
         // app.delete("/services/:id", async (req, res) => {
         //     const id = req.params.id
@@ -60,14 +60,14 @@ async function run() {
         // });
 
         // get all shops
-        app.get('/shops', async(req, res) => {
+        app.get('/shops', async (req, res) => {
             const cursor = shopsCollection.find({});
             const shops = await cursor.toArray();
             res.send(shops)
         })
 
         // get single service
-        app.get('/shops/:id', async(req, res) => {
+        app.get('/shops/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const singleShop = await shopsCollection.findOne(query);
@@ -83,7 +83,7 @@ async function run() {
         //     res.send(singleShop)
         // })
         // get multiple shops by catagory
-        app.get('/catagoryShops/:catagory', async(req, res) => {
+        app.get('/catagoryShops/:catagory', async (req, res) => {
             const catagory = req.params.catagory;
             console.log(catagory, 'from server')
             const query = { status: catagory };
@@ -91,13 +91,29 @@ async function run() {
             res.json(singleShop)
         })
         // save user
-        app.post('/users', async(req, res) => {
+        app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.json(result)
         })
+        // get user by email
+        app.get('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            res.send(user)
+        })
+        // update user info
+        app.put('/users/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = req.body;
+            const result = await usersCollection.updateOne(query, { $set: user }, { upsert: true });
+            res.json(result)
+        })
+
         // post appoinment
-        app.post('/appointment', async(req, res)=>{
+        app.post('/appointment', async (req, res) => {
             const appointment = req.body;
             const result = await appointmentCollection.insertOne(appointment)
             res.json(result)
