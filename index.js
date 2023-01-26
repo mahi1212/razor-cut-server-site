@@ -19,8 +19,8 @@ async function run() {
         const database = client.db('razor-cut-app');
         const servicesCollection = database.collection('catagories');
         const shopsCollection = database.collection('shops');
-        const testsCollection = database.collection('test');
-
+        const usersCollection = database.collection('users');
+        const appointmentCollection = database.collection('appointment');
         console.log('Connected correctly to server');
         
         // get all catagories
@@ -90,7 +90,18 @@ async function run() {
             const singleShop = await shopsCollection.find(query).toArray();
             res.json(singleShop)
         })
-
+        // save user
+        app.post('/users', async(req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user);
+            res.json(result)
+        })
+        // post appoinment
+        app.post('/appointment', async(req, res)=>{
+            const appointment = req.body;
+            const result = await appointmentCollection.insertOne(appointment)
+            res.json(result)
+        })
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
