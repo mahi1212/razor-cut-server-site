@@ -51,21 +51,25 @@ async function run() {
         //     res.send(service)
         // })
 
-        // // delete service by id
-        // app.delete("/services/:id", async (req, res) => {
-        //     const id = req.params.id
-        //     const query = { _id: ObjectId(id) }
-        //     const singleService = await servicesCollection.deleteOne(query)
-        //     res.json(singleService)
-        // });
-
         // get all shops
         app.get('/shops', async (req, res) => {
             const cursor = shopsCollection.find({});
             const shops = await cursor.toArray();
             res.send(shops)
         })
-
+        // create single shop
+        app.post('/shops', async (req, res) => {
+            const shop = req.body;
+            const result = await shopsCollection.insertOne(shop);
+            res.json(result)
+        })
+        // delete shop by id
+        app.delete("/shops/:id", async (req, res) => {
+            const id = req.params.id
+            const query = { _id: ObjectId(id) }
+            const singleShop = await shopsCollection.deleteOne(query)
+            res.json(singleShop)
+        });
         // get single service
         app.get('/shops/:id', async (req, res) => {
             const id = req.params.id;
@@ -90,20 +94,20 @@ async function run() {
             const singleShop = await shopsCollection.find(query).toArray();
             res.json(singleShop)
         })
-        // save user
+        // save user - jenny
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.json(result)
         })
-        // get user by email
+        // get user by email - jenny 
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const user = await usersCollection.findOne(query);
             res.send(user)
         })
-        // update user info
+        // update user info - juhi
         app.put('/users/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
@@ -112,7 +116,7 @@ async function run() {
             res.json(result)
         })
 
-        // post appoinment
+        // post appoinment - juhi
         app.post('/appointment', async (req, res) => {
             const appointment = req.body;
             const result = await appointmentCollection.insertOne(appointment)
