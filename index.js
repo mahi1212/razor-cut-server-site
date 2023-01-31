@@ -30,27 +30,6 @@ async function run() {
             res.send(services)
         })
 
-        // app.get('/test', async(req, res) => {
-        //     const cursor = testsCollection.find({});
-        //     const services = await cursor.toArray();
-        //     res.send(services)
-        // })
-
-        // // add catagories
-        // app.post('/services', async(req, res) => {
-        //     const service = req.body;
-        //     const result = await catagoriesCollection.insertOne(service);
-        //     res.json(result)
-        // })
-
-        // // get single service
-        // app.get('/services/:id', async(req, res) => {
-        //     const id = req.params.id;
-        //     const query = { _id: ObjectId(id) };
-        //     const service = await servicesCollection.findOne(query);
-        //     res.send(service)
-        // })
-
         // get all shops
         app.get('/shops', async (req, res) => {
             const cursor = shopsCollection.find({});
@@ -94,6 +73,7 @@ async function run() {
             const singleShop = await shopsCollection.find(query).toArray();
             res.json(singleShop)
         })
+
         // save user - jenny
         app.post('/users', async (req, res) => {
             const user = req.body;
