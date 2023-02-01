@@ -36,6 +36,21 @@ async function run() {
             const shops = await cursor.toArray();
             res.send(shops)
         })
+        // get shop by email
+        app.get('/shops/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const shop = await shopsCollection.findOne(query);
+            res.send(shop)
+        })
+        // update shop by email
+        app.put('/shops/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const shop = req.body;
+            const result = await shopsCollection.updateOne(query, { $set: shop }, { upsert: true } );
+            res.json(result)
+        })
         // create single shop
         app.post('/shops', async (req, res) => {
             const shop = req.body;
