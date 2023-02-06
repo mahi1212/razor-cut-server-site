@@ -43,12 +43,20 @@ async function run() {
             const shop = await shopsCollection.findOne(query);
             res.send(shop)
         })
+        app.get('/appointment/:email', async (req, res) => {
+            // get all appointment by email
+            const email = req.params.email;
+            const query = { email: email };
+            const appointments = await appointmentCollection.find(query).toArray();
+            res.send(appointments);
+        })
+
         // update shop by email
         app.put('/shops/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const shop = req.body;
-            const result = await shopsCollection.updateOne(query, { $set: shop }, { upsert: true } );
+            const result = await shopsCollection.updateOne(query, { $set: shop }, { upsert: true });
             res.json(result)
         })
         // create single shop
@@ -69,7 +77,7 @@ async function run() {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const singleShop = await shopsCollection.findOne(query);
-            res.send(singleShop)
+            res.json(singleShop)
             // console.log(singleShop, 'from server')
         })
         // get shop by catagory
