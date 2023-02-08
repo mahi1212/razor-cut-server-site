@@ -50,7 +50,18 @@ async function run() {
             const appointments = await appointmentCollection.find(query).toArray();
             res.send(appointments);
         })
-
+        app.get('/history/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { user_email: email };
+            const appointments = await appointmentCollection.find(query).toArray();
+            res.send(appointments);
+        })
+        app.delete('/history/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await appointmentCollection.deleteOne(query);
+            res.json(result)
+        })
         // update shop by email
         app.put('/shops/:email', async (req, res) => {
             const email = req.params.email;
