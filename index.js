@@ -56,12 +56,12 @@ async function run() {
             const appointments = await appointmentCollection.find(query).toArray();
             res.send(appointments);
         })
-        app.delete('/history/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await appointmentCollection.deleteOne(query);
-            res.json(result)
-        })
+        // app.delete('/history/:id', async (req, res) => {
+        //     const id = req.params.id;
+        //     const query = { _id: ObjectId(id) };
+        //     const result = await appointmentCollection.deleteOne(query);
+        //     res.json(result)
+        // })
         // update shop by email
         app.put('/shops/:email', async (req, res) => {
             const email = req.params.email;
@@ -90,6 +90,14 @@ async function run() {
             const singleShop = await shopsCollection.findOne(query);
             res.json(singleShop)
             // console.log(singleShop, 'from server')
+        })
+        // post review object in shop review array find shop by email
+        app.post('/shops/review/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const review = req.body;
+            const result = await shopsCollection.updateOne(query, { $push: { review: review } }, { upsert: true });
+            res.json(result)
         })
         // get shop by catagory
         // app.get('/catagoryShop/:catagory', async(req, res) => {
