@@ -36,11 +36,27 @@ async function run() {
             const shops = await cursor.toArray();
             res.send(shops)
         })
+        // get shop by id for bookmark
+        app.get('/shops/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await shopsCollection.findOne(query);
+            res.json(result)
+        })
         // get shop by email
         app.get('/shops/:email', async (req, res) => {
             const email = req.params.email;
             const query = { email: email };
             const shop = await shopsCollection.findOne(query);
+            res.send(shop)
+        })
+        // update shop by email
+        app.put('/shopss/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const data = req.body;
+            console.log(data, 'from server')
+            const shop = await shopsCollection.updateOne(query, { $set: data }, { upsert: true });
             res.send(shop)
         })
         app.get('/appointment/:email', async (req, res) => {
