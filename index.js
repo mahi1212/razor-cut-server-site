@@ -101,7 +101,7 @@ async function run() {
             const email = req.params.email;
             const query = { email: email };
             const review = req.body;
-            const result = await shopsCollection.updateOne(query, { $push: { review: review } }, { upsert: true });
+            const result = await shopsCollection.updateOne(query, { $push: { review: review } });
             res.json(result)
         })
 
