@@ -38,7 +38,6 @@ async function run() {
         app.get('/shop/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
-            console.log(query)
             const singleShop = await shopsCollection.findOne(query);
             res.json(singleShop)
         })
@@ -57,22 +56,6 @@ async function run() {
             const singleShop = await shopsCollection.deleteOne(query)
             res.json(singleShop)
         });
-
-        // get all appointment by id for berber
-        app.get('/appointment/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const appointments = await appointmentCollection.find(query).toArray();
-            res.send(appointments);
-        })
-        // for customer to get his/her appointment history by id
-        app.get('/history/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { user_id: ObjectId(id) };
-            const appointments = await appointmentCollection.find(query).toArray();
-            res.send(appointments);
-        })
-
         // post review object in shop review array find shop by id
         app.post('/shops/review/:id', async (req, res) => {
             const id = req.params.id;
@@ -81,30 +64,60 @@ async function run() {
             const result = await shopsCollection.updateOne(query, { $push: { review: review } });
             res.json(result)
         })
+        // get all appointment
+        app.get('/appointments', async (req, res) => {
+            const cursor = appointmentCollection.find({});
+            const appointments = await cursor.toArray();
+            res.send(appointments)
+        })
+        // post appoinment
+        app.post('/appointment', async (req, res) => {
+            const appointment = req.body;
+            const result = await appointmentCollection.insertOne(appointment)
+            res.json(result)
+        })
+        // get all appointment by id for berber
+        app.get('/appointment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { shop_id: id };
+            const appointments = await appointmentCollection.find(query).toArray();
+            res.send(appointments);
+        })
+        // update status of appointment by id
+        app.put('/appointment/status/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const status = req.body.appointment_status;
+            const result = await appointmentCollection.updateOne(query, { $set: { appointment_status: status } });
+            res.json(result)
+        })
+        // for customer to get his/her appointment history by id
+        app.get('/history/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { user_id: id };
+            const appointments = await appointmentCollection.find(query).toArray();
+            res.send(appointments);
+        })
+
         // get multiple shops by catagory
         app.get('/catagoryShops/:catagory', async (req, res) => {
             const catagory = req.params.catagory;
-            console.log(catagory, 'from server')
             const query = { status: catagory };
             const singleShop = await shopsCollection.find(query).toArray();
             res.json(singleShop)
         })
-
-        // save user - jenny
+        // get all users 
+        app.get('/users', async (req, res) => {
+            const cursor = usersCollection.find({});
+            const users = await cursor.toArray();
+            res.send(users)
+        })
+        // save user info
         app.post('/users', async (req, res) => {
             const user = req.body;
             const result = await usersCollection.insertOne(user);
             res.json(result)
         })
-        // update status - jeny 
-        app.put('/status/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const status = req.body.status;
-            const result = await appointmentCollection.updateOne(query, { $set: { status: status } });
-            res.json(result)
-        })
-
         // get user by id
         app.get('/user/:id', async (req, res) => {
             const id = req.params.id;
@@ -112,7 +125,6 @@ async function run() {
             const user = await usersCollection.findOne(query);
             res.send(user)
         })
-
         // update user info by id
         app.put('/user/:id', async (req, res) => {
             const id = req.params.id;
@@ -121,12 +133,7 @@ async function run() {
             const result = await usersCollection.updateOne(query, { $set: user }, { upsert: true });
             res.json(result)
         })
-        // post appoinment - juhi
-        app.post('/appointment', async (req, res) => {
-            const appointment = req.body;
-            const result = await appointmentCollection.insertOne(appointment)
-            res.json(result)
-        })
+
 
     } finally {
         // Ensures that the client will close when you finish/error
